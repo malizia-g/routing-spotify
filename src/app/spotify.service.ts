@@ -18,9 +18,29 @@ export class SpotifyService {
     return obsTracks;
   }
 
-  getTrack(id: string) {
+  /*getTrack(id: string) {
     const url = `https://api.spotify.com/v1/tracks/${id}`;
     const headers = new HttpHeaders({Authorization: environment.oauthToken});
+    return this.http.get(url, { headers });
+  }*/
+  getTrack(id: string) {
+    return this.requestAPI(id, "tracks");
+  }
+
+  getAlbum(id: string) {
+    return this.requestAPI(id, "albums");
+  }
+
+  getArtist(id: string) {
+    return this.requestAPI(id, "artists");
+  }
+
+  requestAPI(id: string, searchType: string){
+    const url = `https://api.spotify.com/v1/${searchType}/${id}`;
+    const headers = new HttpHeaders({
+      Authorization: environment.oauthToken
+    });
+
     return this.http.get(url, { headers });
   }
 }
