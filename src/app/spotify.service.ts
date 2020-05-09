@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 //Dichiaro che il servizio è iniettabile agli altri componenti a partire dal componente root
 @Injectable({
@@ -9,11 +10,11 @@ import { environment } from 'src/environments/environment';
 export class SpotifyService {
   //url per oauth: https://developer.spotify.com/console/get-search-item/
   //Ottengo il modulo HttpClient
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth : AuthService ) { }
 
   searchTrack(query: string) {
     const url = `https://api.spotify.com/v1/search?q=${query}&type=track`;
-    const headers = new HttpHeaders({Authorization: environment.oauthToken});
+    const headers = new HttpHeaders({Authorization: this.auth.getToken()});
     let obsTracks = this.http.get(url, { headers });
     return obsTracks;
   }
@@ -38,7 +39,7 @@ export class SpotifyService {
   requestAPI(id: string, searchType: string){
     const url = `https://api.spotify.com/v1/${searchType}/${id}`;
     const headers = new HttpHeaders({
-      Authorization: environment.oauthToken
+      Authorization: this.auth.getToken()
     });
 
     return this.http.get(url, { headers });
